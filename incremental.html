@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="incremental.css">
+        <title>Incremental game</title>
+        <script src="incremental.js"></script>
+    </head>
+    <body>
+        <img id="background" src="./images/deepSpace.jpg">
+        <div id="rewardsArea">
+            <img class="reward" id="reward1" alt="1">
+            <!-- assign them positions in this div -->
+            <img class="reward" id="reward2" alt="2">
+            <img class="reward" id="reward3" alt="3">
+            <img class="reward" id="reward4" alt="4">
+            <img class="reward" id="reward5" alt="5">
+        </div>
+
+        <div id="secretRewardArea">
+            <!-- only visible if all rewards have been collected -->
+            <img class="secretReward" id="hidden1" alt="1">
+            <img class="secretReward" id="hidden2" alt="2">
+            <img class="secretReward" id="hidden3" alt="3">
+        </div>
+        <div id="clickerArea">
+            <img id="clicker">
+        </div>
+
+        <button class="upgradeButton"
+            style="position: absolute; right: 2vw; top: 2vh;"
+            onclick="updateUpgradeArea(undefined, 1)"><img></button>
+        <div id="upgradeArea"> <!-- start off invisible -->
+            <button class="upgradeButton" id="Ubutton1"
+                onclick="updateUpgradeArea( undefined, 1)">1</button>
+            <button class="upgradeButton" id="Ubutton2"
+                onclick="updateUpgradeArea( undefined, 2)">2</button>
+            <button class="upgradeButton" style="position:absolute; right:2vh;"
+                onclick="updateUpgradeArea( undefined, 0)">X</button>
+            <div id="Upage1">
+                <button class="upgrade" id="clawArm" onclick="buyUpgrade(0)"><img src="./images/clawArm.png"
+                        alt="clawArm" class="upgradeImages"><h3>Claw Arm</h3><p></p></button>
+                <button class="upgrade" id="drillArm" onclick="buyUpgrade(1)"><img
+                        alt="drillArm"><p></p></button>
+                <button class="upgrade" id="asteroidMiner" onclick="buyUpgrade(2)"><img
+                        alt="asteroidMiner"><p></p></button>
+                <button class="upgrade" id="planetMiner" onclick="buyUpgrade(3)"><img
+                        alt="planetMiner"><p></p></button>
+                <button class="upgrade" id="dysonSphere" onclick="buyUpgrade(4)"><img
+                        alt="dysonSphere"><p></p></button>
+                <button class="upgrade" id="atomSplitter" onclick="buyUpgrade(5)"><img
+                        alt="atomSplitter"><p></p></button>
+                <button class="upgrade" id="blackHole" onclick="buyUpgrade(6)"><img
+                        alt="blackHole"><p></p></button>
+                <button class="upgrade" id="wormHole" onclick="buyUpgrade(7)"><img
+                        alt="wormHole"><p></p></button>
+            </div>
+
+            <!-- AutoClick speed here -->
+            <div id="Upage2" style="display: none;">
+                <button class="upgrade" id="martians" onclick="buyUpgrade(8)"><img
+                        alt="martians"><p></p></button>
+                <button class="upgrade" id="spacePort" onclick="buyUpgrade(9)"><img
+                        alt="spacePort"><p></p></button>
+                <button class="upgrade" id="galacticMarket" onclick="buyUpgrade(10)"><img
+                        alt="galacticMarket"><p></p></button>
+                <button class="upgrade" id="spaceGod" onclick="buyUpgrade(11)"><img
+                        alt="spaceGod"><p></p></button>
+            </div>
+
+        </div>
+        <button id = "updateStatArea" onclick = "updateStatArea()">Stats</button>
+        <div id = "sC1" class = "screenCover"></div>
+        <div id="statArea">
+            <p id="score">Total matter obtained: <input value="0" 
+                    disabled></p>
+            <p id="clickValue">Click Value: <input value="1" 
+                    disabled></p>
+            <p id="upgradeValue">Current matter spent: <input value="0"
+                     disabled></p>
+            <p id="currentMatter">Current amount of matter: <input value="0"
+                     disabled></p>
+            <p id="timePlayed">Current time played: <input value="0"
+                     disabled> min</p>
+            <p id="numberOfClicks">Number of clicks: <input value="0"
+                     disabled></p>
+            <p id="matterGenerated">Matter Auto created: <input value="0" 
+                    disabled></p>
+            <button id = "devPanelButton" onclick = '{devPanel.style.visibility = "visible"}'>Dev Panel</button>
+        </div>
+
+        <div class="infoPanel" id="rewardInfo" style = "margin-left: 1%;">
+            <!-- teleport to rewards on hover-->
+            <h2>{Reward Name}</h2>
+            <p>{Reward description}</p>
+        </div>
+
+        <div class="infoPanel" id="upgradeInfo" style = "margin-left: -1%;">
+            <!-- teleport to upgrades on hover-->
+            <h2>{Upgrade Name}</h2>
+            <p>{Upgrade description}</p>
+        </div>
+
+        <div id="devPanel">
+            <button class = "devPanelButton" id="godMode" onclick = '{activateGodMode();}'>God Mode <span style="font-weight: bold;color: rgb(197, 58, 58);">(1000x clicks 1000x speed)</span></button>
+            <button class = "devPanelButton" id="reset">Reset Game</button>
+            <button class = "devPanelButton" id="addMatter">Add <input type="number" value="0">
+                Matter</button>
+            <button class = "devPanelButton" id="DLC">???</button>
+        </div>
+
+        <h1 id = "displayedNumber" >0</h1>
+        <h1 id = "displayedUnits">Quadrillion Matter</h1>
+
+        <div id = "clickArea"></div>
+
+        <script> //initialize all variables, events and things that require body to be loaded here
+
+            const clicker = document.getElementById("clicker");
+            clicker.addEventListener("click", () => {
+                score += clickValue;
+                currentMatter += clickValue;
+                document.getElementById("score").children[0].value = score;
+                document.getElementById("currentMatter").children[0].value = currentMatter;
+            });
+
+            const upgradeArea = document.getElementById("upgradeArea");
+            const Upage1 = document.getElementById("Upage1");
+            const Upage2 = document.getElementById("Upage2");
+            const Ubuttons = document.getElementsByClassName("upgrade");
+            upgradeArea.addEventListener("wheel", (e) => {
+                updateUpgradeArea(e);
+            }, true);
+
+            const MAX_UPGRADE_SCROLL = Math.floor(Upage1.offsetHeight / (window.innerHeight * 0.8)) + 5;
+
+            const displayedNumber = document.getElementById("displayedNumber");
+            const displayedUnits = document.getElementById("displayedUnits");
+
+            const clickArea = document.getElementById("clickArea");
+            clickArea.addEventListener("click", () => {handleClick(true)});
+
+
+            updateUpgradePriceText();
+            
+            const upgradeInfo = document.getElementById("upgradeInfo");
+            const rewardInfo = document.getElementById("rewardInfo");
+
+            let tempCounter1 = 0;
+            Array.prototype.forEach.call(document.getElementsByClassName("reward"), function(element){
+                let a = tempCounter1;
+                element.addEventListener("mouseenter", (e) => {updateInfo(1, a, element.getBoundingClientRect())});
+                element.addEventListener("mouseleave", (e) => {updateInfo(0)});
+                tempCounter1 += 1;
+            });
+
+            Array.prototype.forEach.call(document.getElementsByClassName("secretReward"), function(element){
+                let a = tempCounter1;
+                element.addEventListener("mouseenter", (e) => {updateInfo(1, a, element.getBoundingClientRect())});
+                element.addEventListener("mouseleave", (e) => {updateInfo(0)});
+                tempCounter1 += 1;
+            });
+
+            tempCounter1 = 0;
+            updateUpgradeArea(undefined, 1);
+            Array.prototype.forEach.call(document.getElementsByClassName("upgrade"), function(element){
+                let a = tempCounter1;
+                element.addEventListener("mouseenter", (e) => {updateInfo(1, a, element.getBoundingClientRect(), true)});
+                element.addEventListener("mouseleave", (e) => {updateInfo(0, undefined, undefined, true)});
+                element.addEventListener("click", () => {updateInfo(1, a, element.getBoundingClientRect(), true)});
+                tempCounter1 += 1;
+            });
+            updateUpgradeArea(undefined, 0);
+
+            const statArea = document.getElementById("statArea");
+            const screenCover1 = document.getElementById("sC1");
+            const statData = statArea.getElementsByTagName("p");
+            const devPanel = document.getElementById("devPanel");
+
+            setTimePlayedInterval();
+        </script>
+    </body>
+</html>
