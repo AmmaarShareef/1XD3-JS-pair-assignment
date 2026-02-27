@@ -25,7 +25,7 @@ body {
 
 #rewardsArea {
     position: absolute;
-    padding-top: 5vh;
+    padding-top: 2vh;
     top: 0;
     left: 0;
     display: flex;
@@ -38,8 +38,16 @@ body {
 }
 
 .reward {
-    width: 100px; 
-    height: 100px; 
+    width: 80px;
+    border-radius: 15px;
+    opacity: 60%;
+    transition: all;
+}
+
+.reward:hover {
+    opacity: 100%;
+    scale: 105%;
+    transition-duration: 200ms;
 }
 
 #secretRewardArea {
@@ -52,6 +60,7 @@ body {
     height: 100vh;
     width: 10%;
     justify-content: center;
+    visibility: hidden;
 }
 
 .secretReward {
@@ -200,8 +209,55 @@ h3 {
     visibility: hidden;
 }
 
+#helpPanel {
+    background-color: rgb(0, 0, 0);
+    height: 60%;
+    width: 60%;
+    left: 20%;
+    top: 20%;
+    position: absolute;
+    z-index: 11;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    visibility: hidden;
+}
+
+#helpPanel p{
+    color: white;
+}
+
+#helpPanel h1 {
+    color: white;
+}
+
 .devPanelButton {
     height: 15%;
     width: 50%;
     margin: 3%;
+}
+
+#notificationArea {
+    position: absolute;
+    bottom: 2%;
+    height: auto;
+    background-color: red;
+    width: 20%;
+    left: 40%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    gap: 2%;
+    flex-direction: column;
+}
+
+.notifications {
+    height: 16%;
+    background-color: blue;
+    width: 90%;
+    transition: all 0.5s ease-out;
+}
+
+.notifications h2 {
+    text-align: center;
 }

@@ -27,12 +27,12 @@
     <body>
         <img id="background" src="./images/deepSpace.jpg">
         <div id="rewardsArea">
-            <img class="reward" id="reward1" alt="1">
+            <img src="./images/rewards/1MIL.png" class="reward" id="reward1" alt="1">
             <!-- assign them positions in this div -->
-            <img class="reward" id="reward2" alt="2">
-            <img class="reward" id="reward3" alt="3">
-            <img class="reward" id="reward4" alt="4">
-            <img class="reward" id="reward5" alt="5">
+            <img src="./images/rewards/FAM.png" class="reward" id="reward2" alt="2">
+            <img src="./images/rewards/1BIL.png" class="reward" id="reward3" alt="3">
+            <img src="./images/rewards/1HP.png" class="reward" id="reward4" alt="4">
+            <img src="./images/rewards/1TC.png" class="reward" id="reward5" alt="5">
         </div>
 
         <div id="secretRewardArea">
@@ -131,6 +131,7 @@
             <p id="numberOfClicks">Number of clicks: <input value="0" disabled></p>
             <p id="matterGenerated">Matter Auto created: <input value="0" disabled></p>
             <button id="devPanelButton" onclick='{devPanel.style.visibility = "visible"}'>Dev Panel</button>
+            <button id="help" onclick='{helpPanel.style.visibility = "visible"}'>Help</button>
         </div>
 
         <div class="infoPanel" id="rewardInfo" style="margin-left: 1%;">
@@ -148,16 +149,33 @@
         <div id="devPanel">
             <button class="devPanelButton" id="godMode" onclick='{activateGodMode();}'>God Mode <span
                     style="font-weight: bold;color: rgb(197, 58, 58);">(1000x clicks 1000x speed)</span></button>
-            <button class="devPanelButton" id="reset">Reset Game</button>
-            <button class="devPanelButton" id="addMatter">Add <input type="number" value="0">
+            <button class="devPanelButton" id="reset" onclick='{resetGame();}'>Reset Game</button>
+            <button class="devPanelButton" id="addMatter"
+                onclick='{addMatter(this.getElementsByTagName("input")[0].value);}'>Add <input type="number" value="0">
                 Matter</button>
-            <button class="devPanelButton" id="DLC">???</button>
+            <button class="devPanelButton" id="DLC" onclick='{comingSoon();}'>???</button>
+        </div>
+
+        <div id="helpPanel">
+            <h1>How to play</h1>
+            <p>Click inside the pink rectangular frame to get Matter.</p>
+            <p>Click on the yellow square on the top right to open the upgrade menu.</p>
+            <p>Buy Upgrades to increase your click value and obtain Matter faster</p>
+            <p>Win rewards by completing objectives.</p>
         </div>
 
         <h1 id="displayedNumber">0</h1>
-        <h1 id="displayedUnits">Quadrillion Matter</h1>
+        <h1 id="displayedUnits">Matter</h1>
 
         <div id="clickArea"></div>
+
+        <div id="notificationArea">
+            <div class="notifications" id="notificationTemplate" style="display: none;">
+                <h2>
+                    {Reward title here}
+                </h2>
+            </div>
+        </div>
 
         <script> //initialize all variables, events and things that require body to be loaded here
 
@@ -190,6 +208,7 @@
 
             const upgradeInfo = document.getElementById("upgradeInfo");
             const rewardInfo = document.getElementById("rewardInfo");
+            const secretRewardArea = document.getElementById("secretRewardArea");
 
             let tempCounter1 = 0;
             Array.prototype.forEach.call(document.getElementsByClassName("reward"), function (element) {
@@ -221,8 +240,12 @@
             const screenCover1 = document.getElementById("sC1");
             const statData = statArea.getElementsByTagName("p");
             const devPanel = document.getElementById("devPanel");
+            const helpPanel = document.getElementById("helpPanel");
 
             setTimePlayedInterval();
+
+            const notificationTemplate = document.getElementById("notificationTemplate");
+            const notificationArea = document.getElementById("notificationArea");
         </script>
     </body>
 
